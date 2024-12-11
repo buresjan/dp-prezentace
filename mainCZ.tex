@@ -31,15 +31,15 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[short title]{Hledání optimálního tvaru stěn matematického modelu proudění\\ krve v problematice úplného kavopulmonálního cévního napojení} % The short title appears at the bottom of every slide, the full title is only on the title page
-\subtitle{\vspace{4mm}Rektorysova soutěž 2023}
+\title[short title]{Optimální tvar stěn idealizovaného\\ kavopulmonálního spojení} % The short title appears at the bottom of every slide, the full title is only on the title page
+\subtitle{Diplomová práce}
 
-\author[Surname]{Jan Bureš\textmd{, Radek Fučík, Pavel Eichler}}
-\institute[KM FJFI 2023]{Katedra matematiky \newline Fakulta jaderná a fyzikálně inženýrská\newline České vysoké učení technické v Praze}
+\author[Surname]{Jan Bureš\textmd{, Radek Fučík, Radomír Chabiniok}}
+\institute[KM FJFI 2024]{Katedra matematiky \newline Fakulta jaderná a fyzikálně inženýrská\newline České vysoké učení technické v Praze}
 % Your institution as it will appear on the bottom of every slide, maybe shorthand to save space
 
 
-\date{10. listopadu 2023} % Date, can be changed to a custom date
+\date{11. prosince 2024} % Date, can be changed to a custom date
 %----------------------------------------------------------------------------------------
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
@@ -94,65 +94,34 @@
 \begin{frame}{Rámec}
 	
 	\begin{figure}
-		\includegraphics[width=0.9\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/pipeline.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/framework-cz.pdf}
 	\end{figure}
-	\vspace{-2mm}
-	\begin{columns}[T] % align columns
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.5\linewidth, trim={0 0 0 0}, clip]{Images/julia.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/python.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/cpp.png}
-			\end{figure}
-		\end{column}%	
-	\end{columns}
 \end{frame}
 %------------------------------------------------
 \begin{frame}{Rámec}
 	\addtocounter{framenumber}{-1}
 	\begin{figure}
-		\includegraphics[width=0.9\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/pipeline3.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/framework-cz-1.pdf}
 	\end{figure}
-	\vspace{-2mm}
-	\begin{columns}[T] % align columns
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.5\linewidth, trim={0 0 0 0}, clip]{Images/julia.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/python.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/cpp.png}
-			\end{figure}
-		\end{column}%	
-	\end{columns}
 \end{frame}
 %------------------------------------------------
 \begin{frame}{Mřížková Boltzmannova metoda}
 	\begin{columns}[T] % align columns
 		\begin{column}{.45\textwidth}
-			\textbf{LBM:}\\
+			\textbf{LBM:} - KM FJFI\\
 			\begin{itemize}
-				\item rychlostní model D2Q9, CLBM
-				\item kód vyvíjený na KM FJFI
+				\item rychlostní model D3Q27, CuLBM
 			\end{itemize}
 		\begin{eqnarray*}
-			\rho &=& \sum_{k=0}^{q-1} f_{k}\\[3pt]
-			\rho \vect{u} &=& \sum_{k=0}^{q-1} f_{k} \boldsymbol{\xi}_{k} + \dfrac{\Delta t}{2} \rho \boldsymbol{g}
+			\rho &=& \sum_{k=1}^{27} f_{k}\\
+			\rho \vect{u} &=& \sum_{k=1}^{27} f_{k} \boldsymbol{\xi}_{k} + \dfrac{\Delta t}{2} \rho \boldsymbol{g}
 		\end{eqnarray*}
+			\textbf{Okrajové a počáteční podmínky:}\\
+			\begin{itemize}
+				\item hranice oblasti $ \rightarrow $ symetrické OP
+				\item hranice objektu $ \rightarrow $ bounce-back
+				\item rovnovážná počáteční podmínka
+			\end{itemize}
 		\end{column}%
 		\begin{column}{.5\textwidth}
 			\textbf{Rovnice dynamiky tekutin:}
@@ -170,151 +139,71 @@
 		\end{column}%
 	\end{columns}
 \end{frame}
-%------------------------------------------------
-\begin{frame}{LBM - okrajové podmínky}
-	\begin{columns}[T] % align columns
-		\begin{column}{.55\textwidth}
-			\begin{itemize}
-				\item hranice oblasti $ \rightarrow $ momentové OP [1]
-				\begin{itemize}
-					\vspace{1mm}
-					\item neznámé DF získané ze známých DF a makroskopických momentů
-					\vspace{1mm}
-				\end{itemize}
-				\item hranice objektu $ \rightarrow $ intepolační OP [2]
-				\begin{itemize}
-					\vspace{1mm}
-					\item neschodovitá diskretizace křivé hranice objektu
-					\vspace{1mm}
-				\end{itemize}
-			\end{itemize}
-		\end{column}%
-		\begin{column}{.45\textwidth}
-			\begin{figure}
-				\vspace{-0.5cm}
-				\includegraphics[width=0.78\linewidth, trim={0 0 0 0}, clip]{Images/bouzidi.pdf}
-			\end{figure}
-		\end{column}%
-	\end{columns}
-	\vspace{4.5mm}
-	\begin{columns}
-		\begin{column}{.63\textwidth}
-			$\begin{aligned}
-				& \Theta<\frac{1}{2}: \ \ f_{\bar{k}}\left(\boldsymbol{x}_{f_A}, t+\Delta t\right)=2 \Theta f_k^*\left(\boldsymbol{x}_{f_A}, t\right)+(1-2 \Theta) f_k^*\left(\boldsymbol{x}_{f_B}, t\right) \\
-				& \Theta \geq \frac{1}{2}: \ \ f_{\bar{k}}\left(\boldsymbol{x}_{f_A}, t+\Delta t\right)=\frac{1}{2 \Theta} f_k^*\left(\boldsymbol{x}_{f_A}, t\right)+\frac{2 \Theta-1}{2 \Theta} f_{\bar{k}}^*\left(\boldsymbol{x}_{f_A}, t\right)
-			\end{aligned}$
-		\end{column}
-		\begin{column}{.25\textwidth}
-			\begin{figure}
-				$ \color{teal}
-				\Theta=\frac{{\parallel}\boldsymbol{x}_{f_A}-\boldsymbol{x}_w {\parallel}}{{\parallel}\boldsymbol{x}_{f_A}-\boldsymbol{x}_b{\parallel}}$
-			\end{figure}
-		\end{column}%
-	\end{columns}
-	\vspace{3.5mm}
-	\tiny{[1] Eichler P. (2023)}, \textit{Mathematical modeling of fluid flow using lattice Boltzmann
-		method.}, Dizertační práce\\
-	\tiny{[2] Bouzidi M., et al. (2001), \textit{Momentum transfer of a Boltzmann-lattice fluid with boundaries},  doi: 10.1063/1.1399290}
-
-\end{frame}
-%------------------------------------------------
+%%------------------------------------------------
 \begin{frame}{Rámec}
 	\addtocounter{framenumber}{-1}
 	\begin{figure}
-		\includegraphics[width=0.9\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/pipeline2.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/framework-cz-2.pdf}
 	\end{figure}
-	\vspace{-2mm}
-	\begin{columns}[T] % align columns
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.5\linewidth, trim={0 0 0 0}, clip]{Images/julia.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/python.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/cpp.png}
-			\end{figure}
-		\end{column}%	
-	\end{columns}
 \end{frame}
 %------------------------------------------------
 \begin{frame}{Generování geometrie}
-	\begin{columns}
-		\begin{column}{.52\textwidth}
-			\begin{itemize}
-				\setlength\itemsep{2em}
-				\uncover<1->{
-				\item Implementovaný balík \texttt{meshgenerator} v jazyce Python
-				\item Rigidní objekty $ \Rightarrow $ předem výpočítáme různé neznámé hodnoty 
-				\item Různé možné objekty umožňující parametrizaci}
-%			\uncover<2->{
-%				\item \alert{Sidequest} - real-life experiments using MRI $ \Rightarrow $ 3D printing
-%				\vspace{0.5cm}
-%			
-%				\begin{figure}
-%					\includegraphics[width=0.75\linewidth, trim={3.0cm 5.5cm 8.5cm 7.5cm}, clip]{Images/vessel.pdf}
-%				\end{figure}
-%			}
-			\end{itemize}
-		\end{column}
-		\uncover<1->{
-		\begin{column}[c]{.47\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.9\linewidth, trim={0 0 0 0cm}, clip]{Images/figvessel.pdf}
-			\end{figure}
-			\begin{figure}
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0cm}, clip]{Images/c1.png}
-			\end{figure}
-			\begin{figure}
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0cm}, clip]{Images/figoktagon.pdf}
-			\end{figure}
-		\end{column}
-	}
-	
-	\end{columns}
-
+	\begin{itemize}
+		\item balík vytvořený pro účely parametrického generování geometrie a následné voxelizace
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.8\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/meshgen.pdf}
+	\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}{Generování geometrie - šablona}
+	\begin{figure}
+		\includegraphics[width=0.6\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/meshgen-1.pdf}
+	\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}{Generování geometrie - STL}
+	\begin{figure}
+		\includegraphics[width=0.6\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/meshgen-2.pdf}
+	\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}{Generování geometrie - voxelizace}
+	\begin{figure}
+		\includegraphics[width=0.6\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/meshgen-3.pdf}
+	\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}{Generování geometrie - výsledek}
+	\begin{figure}
+		\includegraphics[width=0.6\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/meshgen-4.pdf}
+	\end{figure}
 \end{frame}
 %------------------------------------------------
 \begin{frame}{Rámec}
 	\addtocounter{framenumber}{-1}
 	\begin{figure}
-		\includegraphics[width=0.9\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/pipeline1.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 -0.1cm 0 0}, clip]{Images/framework-cz-3.pdf}
 	\end{figure}
-	\vspace{-2mm}
-	\begin{columns}[T] % align columns
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.5\linewidth, trim={0 0 0 0}, clip]{Images/julia.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/python.png}
-			\end{figure}
-		\end{column}%
-		\begin{column}{.31\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.35\linewidth, trim={0 0 0 0cm}, clip]{Images/cpp.png}
-			\end{figure}
-		\end{column}%	
-	\end{columns}
 \end{frame}
+
 %------------------------------------------------
 \begin{frame}{Optimalizace}
 	\begin{itemize}
 		\setlength\itemsep{1.8em}
-		\item \texttt{Optim} - balík v jazyce Julia 
+		\item Předchozí práce (VÚ) $\Rightarrow$ bezgradientní metody
 		\item Úloha s vazbami $\Rightarrow$ extrémní bariérová metoda
-		\item Algoritmy: L-BFGS, Nelderova-Meadova metoda (bezgradientní)
-		\item Vyčíslení $ f \ (x) $ pomocí LBM $\Rightarrow$ \alert{výpočetně i časově náročné}
-		\item Určení $ \nabla f \ (x) $ pomocí LBM $\Rightarrow$ \alert{ještě více náročné}
+		\item Vyčíslení $ f \ (x \, ) $ pomocí LBM $\Rightarrow$ \alert{výpočetně i časově náročné}
+		\item Algoritmy:
+			 \begin{itemize}
+				\item[-] Nelderova-Meadova metoda -- vlastní implementace podporující paralelizaci
+				\item[-] Mesh Adaptive Direct Search (NOMAD [1])
+			 \end{itemize}
 	\end{itemize}
+\vspace{5.5mm}
+\tiny{[1] C. Audet, et al. (2022)}, \textit{Algorithm~1027: NOMAD version~4: Nonlinear optimization with the MADS algorithm.}, DOI: 10.1145/3544489\\
 \end{frame}
+
 
 
 %------------------------------------------------
@@ -323,499 +212,243 @@
 \begin{frame}{Výsledky}
 	\begin{itemize}
 		\setlength\itemsep{1.4em}
-		\item Použití balíku \texttt{meshgenerator}, řešení netriviálních úloh
+		\item Použití balíku \texttt{meshgen}, řešení netriviálních úloh
 		\item Reynoldsův rozklad:
 				$$ \vect{u} \,(x, y, z, t) = \overline{\vect{u} \,(x, y, z)} + \vect{u}^\prime(x, y, z, t) $$
 		\item Účelové funkce: turbulentní kinetická energie a smyková rychlost
 				$$ T_{\mathrm{turb}} = \frac{1}{2} (\vect{u}^\prime(x, y, z, t) )^2, \hspace{5mm} \dot{\gamma} = \sqrt{2} || \, \mathbf{D} \, ||^{}_{F}$$
-		\item Nestlačitelná newtonovská tekutina, 2D
+		\item Nestlačitelná newtonovská tekutina, 3D
 	\end{itemize}
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{1D - rotující elipsa}
-	\begin{itemize}
-	\item úhel rotace $ \theta $ je jediný optimalizační parametr
-	\vspace{7mm}
-	\end{itemize}
-	\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/elipsa1.pdf}			
+\begin{frame}{1 parametr - posun IVC}
+	\begin{center}	
+		\includegraphics[width=0.7\linewidth, trim={0 0 0 0}, clip]{Images/3d-tcpc-schema-combined.pdf}	
+	\end{center}		
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1D - rotující elipsa}
-	\addtocounter{framenumber}{-1}
+\begin{frame}{1 parametr - posun IVC}
+	\begin{itemize}
+		\item Posun osy IVC, ozn. $o_1$, je jediný optimalizační parametr
+	\end{itemize}
+	\begin{center}
+		\includegraphics[width=0.55\linewidth, trim={0 0 0 36mm}, clip]{Images/model1.pdf}
+	\end{center}			
+\end{frame}
+%%------------------------------------------------
+\begin{frame}{1 parametr - účelové funkce}
+	\begin{itemize}
+		\item Hodnoty účelových funkcí v závislosti na posunu $o_1$ (pouze nezáporný posun)
+	\end{itemize}
 	\begin{columns}
-		\begin{column}{.56\textwidth}
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/elip1interpolated.pdf}			
+		\begin{column}{.5\textwidth}
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/stress.pdf}			
 		\end{column}
-		\begin{column}{.52\textwidth}
-			Minimum:\\[4pt]
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/ellipse1_min_a.png}
-			\\ \vspace{2mm}
-			Maximum:\\[4pt]	
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/ellipse1_max_a.png}
-			\\ \vspace{4mm}		
-			\centering
-			\hspace{-6mm}\includegraphics[width=0.6\linewidth, trim={0 0 0 0}, clip]{Images/ellipse12_legenda.png}
+		\begin{column}{.5\textwidth}
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/tke.pdf}
 		\end{column}
 	\end{columns}
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1D - rotující elipsa}
+\begin{frame}{1 parametr}
 	\begin{itemize}
-		\item úhel rotace $ \theta $ je jediný optimalizační parametr
-		\vspace{7mm}
+		\item Určení vazeb pro posun dle fyziologických požadavků $\Rightarrow$ 0 cm až 1.2 cm
 	\end{itemize}
-	\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/elipsa2.pdf}			
-\end{frame}
-%------------------------------------------------
-\begin{frame}{1D - rotující elipsa}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.56\textwidth}
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/elip2interpolated.pdf}			
-		\end{column}
-		\begin{column}{.52\textwidth}
-			Minimum:\\[4pt]
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/ellipse2_min_aa.png}
-			\\ \vspace{2mm}
-			Maximum:\\[4pt]	
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/ellipse2_max_a.png}
-			\\ \vspace{4mm}		
-			\centering
-			\hspace{-6mm}\includegraphics[width=0.6\linewidth, trim={0 0 0 0}, clip]{Images/ellipse12_legenda.png}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\begin{columns}
-		\begin{column}{.6\textwidth}
-			\begin{itemize}
-				\setlength\itemsep{1.4em}
-				\item změna tvaru, rotace
-				\item konstantní obsah
-				\item implicitní vztah:
-			\end{itemize}		
-			\vspace{4mm}
-			$$ \ \ \ \ \ \ \ \ \left( x^{2}+ y^{2}+a^{2} \right)^{2}-4 x ^{2} a^{2}-b^{4} = 0 $$
-			\vspace{-3mm}
-			\begin{itemize}
-				\item $ a $ and $ \theta $ (úhel rotace) jsou optimalizační parametry
-			\end{itemize}	
-		\end{column}
-		\begin{column}{.4\textwidth}
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/a1.png}			
-		\end{column}
-	\end{columns}	
-\end{frame}
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.6\textwidth}
-			\begin{itemize}
-				\setlength\itemsep{1.4em}
-				\item změna tvaru, rotace
-				\item konstantní obsah
-				\item implicitní vztah:
-			\end{itemize}		
-			\vspace{4mm}
-			$$ \ \ \ \ \ \ \ \ \left( x^{2}+ y^{2}+a^{2} \right)^{2}-4 x ^{2} a^{2}-b^{4} = 0 $$
-			\vspace{-3mm}
-			\begin{itemize}
-				\item $ a $ and $ \theta $ (úhel rotace) jsou optimalizační parametry
-			\end{itemize}	
-		\end{column}
-		\begin{column}{.4\textwidth}
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/a2.png}			
-		\end{column}
-	\end{columns}	
-\end{frame}
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.6\textwidth}
-			\begin{itemize}
-				\setlength\itemsep{1.4em}
-				\item změna tvaru, rotace
-				\item konstantní obsah
-				\item implicitní vztah:
-			\end{itemize}		
-			\vspace{4mm}
-			$$ \ \ \ \ \ \ \ \ \left( x^{2}+ y^{2}+a^{2} \right)^{2}-4 x ^{2} a^{2}-b^{4} = 0 $$
-			\vspace{-3mm}
-			\begin{itemize}
-				\item $ a $ and $ \theta $ (úhel rotace) jsou optimalizační parametry
-			\end{itemize}	
-		\end{column}
-		\begin{column}{.4\textwidth}
-			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/a3.png}			
-		\end{column}
-	\end{columns}	
-\end{frame}
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{1\textwidth}
-			\begin{figure}
-				\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/cassini.pdf}		
-			\end{figure}
-		\end{column}
-	\end{columns}	
-\end{frame}
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\begin{columns}
-		\begin{column}{1\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.68\linewidth, trim={0 0 0cm 9mm}, clip]{Images/cassini2Dinterpolated.png}		
-			\end{figure}
-		\end{column}
-	\end{columns}	
-\end{frame}
-
-%------------------------------------------------
-\begin{frame}{2D - Cassiniho ovál}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.55\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.1\linewidth, trim={0 0 1cm 9mm}, clip]{Images/2full.png}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.45\textwidth}
-%			\hspace{1mm}Nelder-Mead:
-			\vspace{8mm}
-			\begin{figure}
-				\includegraphics[width=1.0\linewidth, trim={0 0 0 9mm}, clip]{Images/2.pdf}		
-			\end{figure}
-%			\vspace{0.8cm}
-%			\hspace{1mm}L-BFGS:
-%			\begin{figure}
-%				\includegraphics[width=1.0\linewidth, trim={0 0 0 9mm}, clip]{Images/bfgs.png}		
-%			\end{figure}
-		\end{column}
-	\end{columns}	
-\end{frame}
-%------------------------------------------------
-\begin{frame}{3D - Zjednodušený model TCPC}
-	\begin{itemize}
-		\item 3 optimalizační parametry
-	\end{itemize}
-	\begin{columns}
-		\begin{column}{.58\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={5cm 6cm 8cm 19cm}, clip]{Images/a.png}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.42\textwidth}
-			\vspace{-15mm}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={0 0 0 0}, clip]{Images/krizovatka.pdf}		
-			\end{figure}
-			\vspace{-3mm}
-			\begin{subequations}\label{eq:tcpc vazby}
-				\begin{eqnarray}
-				1{,}25 &\leq& o_2 \hspace{1.5mm}\leq  \hspace{1.5mm}2{,}75 \, \nonumber,\\[3pt]
-				-0{,}05 &\leq& l_2 \hspace{2.5mm}\leq \hspace{1.5mm}0{,}05 \, \nonumber,\\[3pt]
-				50 &\leq& k_2 \hspace{2mm}\leq \hspace{1.5mm}200 \, \nonumber.
-				\end{eqnarray}
-			\end{subequations}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{3D - Zjednodušený model TCPC}
-	\addtocounter{framenumber}{-1}
-	\begin{itemize}
-		\item 3 optimalizační parametry
-	\end{itemize}
-	\begin{columns}
-		\begin{column}{.58\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={5cm 6cm 8cm 19cm}, clip]{Images/b.png}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.42\textwidth}
-			\vspace{-15mm}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={0 0 0 0}, clip]{Images/krizovatka.pdf}		
-			\end{figure}
-			\vspace{-3mm}
-			\begin{subequations}\label{eq:tcpc vazby}
-				\begin{eqnarray}
-				1{,}25 &\leq& o_2 \hspace{1.5mm}\leq  \hspace{1.5mm}2{,}75 \, \nonumber,\\[3pt]
-				-0{,}05 &\leq& l_2 \hspace{2.5mm}\leq \hspace{1.5mm}0{,}05 \, \nonumber,\\[3pt]
-				50 &\leq& k_2 \hspace{2mm}\leq \hspace{1.5mm}200 \, \nonumber.
-				\end{eqnarray}
-			\end{subequations}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{3D - Zjednodušený model TCPC}
-	\addtocounter{framenumber}{-1}
-	\begin{itemize}
-		\item 3 optimalizační parametry
-	\end{itemize}
-	\begin{columns}
-		\begin{column}{.58\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={5cm 6cm 8cm 19cm}, clip]{Images/c.png}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.42\textwidth}
-			\vspace{-15mm}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={0 0 0 0}, clip]{Images/krizovatka.pdf}		
-			\end{figure}
-			\vspace{-3mm}
-			\begin{subequations}\label{eq:tcpc vazby}
-				\begin{eqnarray}
-				1{,}25 &\leq& o_2 \hspace{1.5mm}\leq  \hspace{1.5mm}2{,}75 \, \nonumber,\\[3pt]
-				-0{,}05 &\leq& l_2 \hspace{2.5mm}\leq \hspace{1.5mm}0{,}05 \, \nonumber,\\[3pt]
-				50 &\leq& k_2 \hspace{2mm}\leq \hspace{1.5mm}200 \, \nonumber.
-				\end{eqnarray}
-			\end{subequations}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{3D - Zjednodušený model TCPC}
-	\addtocounter{framenumber}{-1}
-	\begin{itemize}
-		\item 3 optimalizační parametry
-	\end{itemize}
-	\begin{columns}
-		\begin{column}{.58\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={5cm 6cm 8cm 19cm}, clip]{Images/d.png}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.42\textwidth}
-			\vspace{-15mm}
-			\begin{figure}
-				\includegraphics[width=1.\linewidth, trim={0 0 0 0}, clip]{Images/krizovatka.pdf}		
-			\end{figure}
-			\vspace{-3mm}
-			\begin{subequations}\label{eq:tcpc vazby}
-				\begin{eqnarray}
-				1{,}25 &\leq& o_2 \hspace{1.5mm}\leq  \hspace{1.5mm}2{,}75 \, \nonumber,\\[3pt]
-				-0{,}05 &\leq& l_2 \hspace{2.5mm}\leq \hspace{1.5mm}0{,}05 \, \nonumber,\\[3pt]
-				50 &\leq& k_2 \hspace{2mm}\leq \hspace{1.5mm}200 \, \nonumber.
-				\end{eqnarray}
-			\end{subequations}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{Minimalizace smykové rychlosti}
-	$ l = -0{,}004, k_2 = 161, o_2 = 2{,}33$
-	\begin{figure}[H]
+	\begin{center}
+%		\vspace{-0.5cm}
+		\includegraphics[width=0.55\linewidth, trim={0 0 0 0mm}, clip]{Images/IVCsplit.pdf}
 		\centering
-		\vspace{3mm}
-		\includegraphics[width=0.75\textwidth]
-		%		{Images/tcpc/tcpc_dotgamma_veloc_a.png}\\[10pt]
-		{Images/tcpc_dotgamma_veloc_a_streamlines.png}\\[11pt]
-		\includegraphics[width=0.37	\textwidth]{Images/tcpc_dotgamma_veloc_legenda.png}
-	\end{figure}
+		\includegraphics[width=0.15\linewidth, trim={0 0 0 0mm}, clip]{Images/split-leg.pdf}
+	\end{center}			
 \end{frame}
 %------------------------------------------------
-\begin{frame}{Minimalizace smykové rychlosti}
-	\addtocounter{framenumber}{-1}
+\begin{frame}{1 parametr - minimalizace smykové rychlosti}
 	\begin{columns}
-		\begin{column}{.65\textwidth}
-			\begin{figure}
-				\vspace{2mm}
-				\includegraphics[width=1.0\linewidth, trim={0 0 1cm 9mm}, clip]{Images/tcpc_dotgamma_veloc_a_streamlines.png}
-				\\[7pt]
-				\includegraphics[width=0.37	\textwidth]{Images/tcpc_dotgamma_veloc_legenda.png}
-			\end{figure}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08stress-side.pdf}
+			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/stress_leg.pdf}			
 		\end{column}
-		\begin{column}{.35\textwidth}
-			%			\hspace{1mm}Nelder-Mead:
-			\begin{figure}
-				\renewcommand{\figurename}{Fontanovský oběh}
-				\includegraphics[width=0.75\linewidth, trim={0 0 0 0mm}, clip]{Images/vortex.png}
-				\caption{[3]}		
-			\end{figure}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08velocity-side.pdf}
+			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
 		\end{column}
 	\end{columns}	
-	\vspace{-1mm}
-	\tiny{[3] Rijnberg F. (2018), \textit{Energetics of Blood Flow in Cardiovascular
-			Disease
-		}, doi: 10.1161/CIRCULATIONAHA.117.033359}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{Minimalizace turbulentní kinetické energie}
-	$ l = 0{,}002, k_2 = 167, o_2 = 2{,}75$
-	\begin{figure}[H]
-		\centering
-		\vspace{3mm}
-		\includegraphics[width=0.75
-		\textwidth]{Images/tcpc_tke_veloc_a3.png}\\[11pt]
-		\includegraphics[width=0.37	\textwidth]{Images/tcpc_dotgamma_veloc_legenda.png}
-	\end{figure}
-\end{frame}
-%------------------------------------------------
-\begin{frame}{Porovnání $ \dot{\gamma} $}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.42\textwidth}
-			\begin{figure}
-				\vspace{-1mm}
-				Smyková rychlost:
-				\includegraphics[width=0.8\linewidth, trim={0 0 0cm 0mm}, clip]{Images/gamma_frame.pdf}		
-			\end{figure}
-		\end{column}
-		\begin{column}{.42\textwidth}
-			%			\hspace{1mm}Nelder-Mead:
-		\begin{figure}
-			\vspace{-1mm}
-			Turbulentní kinetická energie:
-			\includegraphics[width=0.8\linewidth, trim={0 0 0 0mm}, clip]{Images/tke_frame.pdf}		
-		\end{figure}
-		\end{column}
-	\end{columns}
-	\centering
 	\vspace{3mm}
-	\includegraphics[width=0.35	\textwidth, trim={0 0 0mm 0mm}, clip]{Images/tcpc_dotgamma_dotgamma_ legenda.png}
+	\begin{center}
+		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/stress-mini.pdf}
+	\end{center}	
 \end{frame}
 %------------------------------------------------
+\begin{frame}{1 parametr - minimalizace smykové rychlosti}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08stress-top.pdf}
+			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/stress_leg.pdf}			
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/helix.pdf}
+			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
+		\end{column}
+	\end{columns}	
+	\vspace{3mm}
+	\begin{center}
+		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/stress-mini.pdf}
+	\end{center}	
+\end{frame}
+%------------------------------------------------
+\begin{frame}{1 parametr - minimalizace TKE}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 -2mm 0 0}, clip]{Images/12IVCsplit.pdf}
+			\includegraphics[width=0.33\linewidth, trim={0 0 0 0mm}, clip]{Images/split-leg.pdf}			
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08velocity-side.pdf}
+			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
+		\end{column}
+	\end{columns}	
+	\vspace{3mm}
+	\begin{center}
+		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/tke-mini.pdf}
+	\end{center}	
+\end{frame}
+%%------------------------------------------------
+
 \begin{frame}{Shrnutí}
 %	\addtocounter{framenumber}{-1}
-	\setcounter{framenumber}{15}
-	\uncover<1->{
+%	\setcounter{framenumber}{15}
+
 	\begin{itemize}
 		\setlength\itemsep{1.1em}
 		\item Vytvořen rámec pro generování a řešení netriviálních optimalizačních úloh s pomocí LBM
-		\item Plány do budoucna: přechod do 3D, TCP napojení, experimenty na MRI
+		\item Navrženy parametrické modely idealizovaného TCPC
+		\item Plány do budoucna: otestování komplexnějšího modelu s více parametry ¨(DP), experimenty na MRI
 	\end{itemize}
-	\begin{center}
-		
-		\animategraphics[loop,autoplay,width=0.52\linewidth]{33}{Images/demosnaps/demo-}{0}{131}
-	\end{center}
-	\vspace{-1mm}}
-	\uncover<2->{
-	\huge{\centerline{\textbf{Děkuji za pozornost!}}}}
+	\vfill%
+	\huge{\centerline{\textbf{Děkuji za pozornost!}}}
 \end{frame}
 %------------------------------------------------
-%\begin{frame}{Zdroje}
-%    % Beamer does not support BibTeX so references must be inserted manually as below
-%    \footnotesize{
-%    	\begin{thebibliography}{99}
-%    		\bibitem[Smith, 2012]{p1} [1] Eichler P., Fučík R., Strachota P. (2022)
-%    		\newblock Investigation of mesoscopic boundary conditions for lattice Boltzmann method
-%    		in laminar flow problems.
-%    		\newblock preprint submitted to \emph{Comput. Math. with Appl.}.
-%    	\end{thebibliography}
-%    }
-%    \footnotesize{
-%        \begin{thebibliography}{99}
-%            \bibitem[Smith, 2012]{p1} [2] Bouzidi M., Firdaouss M., Lallemand P. (2001)
-%            \newblock Momentum transfer of a Boltzmann-lattice fluid with boundaries.
-%            \newblock \emph{Physics of Fluids} 13(11), 3452–3459.
-%        \end{thebibliography}
-%    }
-%	\vspace{1cm}
+%%\begin{frame}{Zdroje}
+%%    % Beamer does not support BibTeX so references must be inserted manually as below
+%%    \footnotesize{
+%%    	\begin{thebibliography}{99}
+%%    		\bibitem[Smith, 2012]{p1} [1] Eichler P., Fučík R., Strachota P. (2022)
+%%    		\newblock Investigation of mesoscopic boundary conditions for lattice Boltzmann method
+%%    		in laminar flow problems.
+%%    		\newblock preprint submitted to \emph{Comput. Math. with Appl.}.
+%%    	\end{thebibliography}
+%%    }
+%%    \footnotesize{
+%%        \begin{thebibliography}{99}
+%%            \bibitem[Smith, 2012]{p1} [2] Bouzidi M., Firdaouss M., Lallemand P. (2001)
+%%            \newblock Momentum transfer of a Boltzmann-lattice fluid with boundaries.
+%%            \newblock \emph{Physics of Fluids} 13(11), 3452–3459.
+%%        \end{thebibliography}
+%%    }
+%%	\vspace{1cm}
+%%
+%%	Všechny obrázky bez citace jsou originální nebo v public domain.
+%%
+%%\end{frame}
 %
-%	Všechny obrázky bez citace jsou originální nebo v public domain.
 %
+%%------------------------------------------------
+%\begin{frame}[plain]{1. Automatický výpočet derivace}
+%%	\addtocounter{framenumber}{-1}
+%	\begin{itemize}
+%		\item[-] Volně dostupné balíky v rámci \texttt{JuliaDiff} [4]:
+%	\end{itemize}
+%	\begin{enumerate}
+%		\item \texttt{FiniteDifferences.jl} [5]
+%		\item \texttt{ForwardDiff.jl} [6]
+%	\end{enumerate}
+%	\vspace{2mm}
+%	$$
+%	\vec{x}=\left[\begin{array}{c}
+%	x_1 \\
+%	\vdots \\
+%	x_i \\
+%	\vdots \\
+%	x_k
+%	\end{array}\right] \rightarrow \vec{x}_\epsilon=\left[\begin{array}{c}
+%	x_1+\epsilon_1+0 \sum_{n=2}^k \epsilon_n \\
+%	\vdots \\
+%	x_i+\epsilon_i+0 \sum_{n \neq i} \epsilon_n \\
+%	\vdots \\
+%	x_k+\epsilon_k+0 \sum_{n=1}^{k-1} \epsilon_n
+%	\end{array}\right]=\left[\begin{array}{c}
+%	x_1+\epsilon_1 \\
+%	\vdots \\
+%	x_i+\epsilon_i \\
+%	\vdots \\
+%	x_k+\epsilon_k
+%	\end{array}\right] \rightarrow f\left(\vec{x}_\epsilon\right)=f(\vec{x})+\sum_{i=1}^k \frac{\partial f(\vec{x})}{\partial x_i} \epsilon_i
+%	$$\\[4pt]
+%	\tiny{[4] https://juliadiff.org/}\\[3pt]
+%	\tiny{[5] https://github.com/JuliaDiff/FiniteDifferences.jl}\\[3pt]
+%	\tiny{[6] Revels J., et al. (2016), \textit{Forward-Mode Automatic Differentiation in Julia}, doi: 10.48550/arXiv.1607.07892}
 %\end{frame}
-
-
-%------------------------------------------------
-\begin{frame}[plain]{1. Automatický výpočet derivace}
+%%------------------------------------------------
+%\begin{frame}[plain]{2. Použití schodovitých OP}
 %	\addtocounter{framenumber}{-1}
-	\begin{itemize}
-		\item[-] Volně dostupné balíky v rámci \texttt{JuliaDiff} [4]:
-	\end{itemize}
-	\begin{enumerate}
-		\item \texttt{FiniteDifferences.jl} [5]
-		\item \texttt{ForwardDiff.jl} [6]
-	\end{enumerate}
-	\vspace{2mm}
-	$$
-	\vec{x}=\left[\begin{array}{c}
-	x_1 \\
-	\vdots \\
-	x_i \\
-	\vdots \\
-	x_k
-	\end{array}\right] \rightarrow \vec{x}_\epsilon=\left[\begin{array}{c}
-	x_1+\epsilon_1+0 \sum_{n=2}^k \epsilon_n \\
-	\vdots \\
-	x_i+\epsilon_i+0 \sum_{n \neq i} \epsilon_n \\
-	\vdots \\
-	x_k+\epsilon_k+0 \sum_{n=1}^{k-1} \epsilon_n
-	\end{array}\right]=\left[\begin{array}{c}
-	x_1+\epsilon_1 \\
-	\vdots \\
-	x_i+\epsilon_i \\
-	\vdots \\
-	x_k+\epsilon_k
-	\end{array}\right] \rightarrow f\left(\vec{x}_\epsilon\right)=f(\vec{x})+\sum_{i=1}^k \frac{\partial f(\vec{x})}{\partial x_i} \epsilon_i
-	$$\\[4pt]
-	\tiny{[4] https://juliadiff.org/}\\[3pt]
-	\tiny{[5] https://github.com/JuliaDiff/FiniteDifferences.jl}\\[3pt]
-	\tiny{[6] Revels J., et al. (2016), \textit{Forward-Mode Automatic Differentiation in Julia}, doi: 10.48550/arXiv.1607.07892}
-\end{frame}
-%------------------------------------------------
-\begin{frame}[plain]{2. Použití schodovitých OP}
-	\addtocounter{framenumber}{-1}
-	\begin{itemize}
-		\item Problém pro gradientní metody
-	\end{itemize}
-	\pause
-	\vspace{-8mm}
-	\begin{columns}
-		\begin{column}{.5\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2left.pdf}
-			\end{figure}
-		\end{column}
-		\begin{column}{.5\textwidth}
-			\begin{figure}
-				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2right.pdf}
-			\end{figure}
-		\end{column}
-	\end{columns}
-\end{frame}
-%------------------------------------------------
-\begin{frame}[plain]{3. Plánovaná rozšíření}
-	\addtocounter{framenumber}{-1}
-	\begin{columns}
-		\begin{column}{.5\textwidth}
-			\begin{figure}
-				\renewcommand{\figurename}{Fantom}
-				\includegraphics[width=1.0\linewidth, trim={0 0 0cm 0mm}, clip]{Images/fantom.png}
-				\caption{Převzato z [1], foto: J. Ryszawy}
-			\end{figure}
-		\end{column}
-		\begin{column}{.5\textwidth}
-			\begin{figure}
-				\renewcommand{\figurename}{Modifikace systému}
-				\includegraphics[width=0.85\linewidth, trim={0 0 0 0mm}, clip]{Images/energyloss.pdf}
-				\caption{Převzato z [3]}		
-			\end{figure}
-		\end{column}
-	\end{columns}	
-	\vspace{1mm}
-	\tiny{[1] Eichler P. (2023)}, \textit{Mathematical modeling of fluid flow using lattice Boltzmann
-	method.}, Dizertační práce\\[3pt]
-	\tiny{[3] Rijnberg F. (2018), \textit{Energetics of Blood Flow in Cardiovascular
-			Disease
-		}, doi: 10.1161/CIRCULATIONAHA.117.033359}
-\end{frame}
-%------------------------------------------------
-\begin{frame}[plain]{4. Reálné geometrie}
-	\addtocounter{framenumber}{-1}
-	\animategraphics[loop,autoplay,width=0.98\linewidth]{33}{Images/demosnaps/tcpc-}{0}{131}
-	\vspace{1mm}
-	\tiny{{[7] Marsden A., et al. (2010)}, \textit{A new multiparameter approach to computational simulation for Fontan assessment and redesign}, ,\\doi: 10.1111/j.1747-0803.2010.00383.x, data dostupná z www.vascularmodel.com}
-\end{frame}
+%	\begin{itemize}
+%		\item Problém pro gradientní metody
+%	\end{itemize}
+%	\pause
+%	\vspace{-8mm}
+%	\begin{columns}
+%		\begin{column}{.5\textwidth}
+%			\begin{figure}
+%				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2left.pdf}
+%			\end{figure}
+%		\end{column}
+%		\begin{column}{.5\textwidth}
+%			\begin{figure}
+%				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2right.pdf}
+%			\end{figure}
+%		\end{column}
+%	\end{columns}
+%\end{frame}
+%%------------------------------------------------
+%\begin{frame}[plain]{3. Plánovaná rozšíření}
+%	\addtocounter{framenumber}{-1}
+%	\begin{columns}
+%		\begin{column}{.5\textwidth}
+%			\begin{figure}
+%				\renewcommand{\figurename}{Fantom}
+%				\includegraphics[width=1.0\linewidth, trim={0 0 0cm 0mm}, clip]{Images/fantom.png}
+%				\caption{Převzato z [1], foto: J. Ryszawy}
+%			\end{figure}
+%		\end{column}
+%		\begin{column}{.5\textwidth}
+%			\begin{figure}
+%				\renewcommand{\figurename}{Modifikace systému}
+%				\includegraphics[width=0.85\linewidth, trim={0 0 0 0mm}, clip]{Images/energyloss.pdf}
+%				\caption{Převzato z [3]}		
+%			\end{figure}
+%		\end{column}
+%	\end{columns}	
+%	\vspace{1mm}
+%	\tiny{[1] Eichler P. (2023)}, \textit{Mathematical modeling of fluid flow using lattice Boltzmann
+%	method.}, Dizertační práce\\[3pt]
+%	\tiny{[3] Rijnberg F. (2018), \textit{Energetics of Blood Flow in Cardiovascular
+%			Disease
+%		}, doi: 10.1161/CIRCULATIONAHA.117.033359}
+%\end{frame}
+%%------------------------------------------------
+%\begin{frame}[plain]{4. Reálné geometrie}
+%	\addtocounter{framenumber}{-1}
+%	\animategraphics[loop,autoplay,width=0.98\linewidth]{33}{Images/demosnaps/tcpc-}{0}{131}
+%	\vspace{1mm}
+%	\tiny{{[7] Marsden A., et al. (2010)}, \textit{A new multiparameter approach to computational simulation for Fontan assessment and redesign}, ,\\doi: 10.1111/j.1747-0803.2010.00383.x, data dostupná z www.vascularmodel.com}
+%\end{frame}
 %------------------------------------------------
 %
 %\begin{frame}
