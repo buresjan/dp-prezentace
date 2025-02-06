@@ -15,6 +15,7 @@
 \usepackage{mwe,tikz}\usepackage[percent]{overpic}
 \usepackage{animate}
 
+\usepackage{subcaption}
 %Select the Epilogue font (requires luaLatex or XeLaTex compilers)
 \usepackage{fontspec}
 \setsansfont{Epilogue}[
@@ -39,7 +40,8 @@
 % Your institution as it will appear on the bottom of every slide, maybe shorthand to save space
 
 
-\date{11. prosince 2024} % Date, can be changed to a custom date
+\date{29. ledna 2025} % Date, can be changed to a custom date
+
 %----------------------------------------------------------------------------------------
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
@@ -77,7 +79,7 @@
 			\begin{equation*}
 				\min _{\vect{x} \in \mathbb{X} } f \ (\vect{x}),
 			\end{equation*}
-			kde $ f \ (\vect{x}) $ je účelová funkce.\\ \pause
+			kde $ f \ (\vect{x}) $ je účelová funkce.\\
 			\vspace{11pt}
 			\textbf{Charakterizace:}\\[2pt]
 			\begin{itemize}
@@ -113,12 +115,12 @@
 				\item rychlostní model D3Q27, CuLBM
 			\end{itemize}
 		\begin{eqnarray*}
-			\rho &=& \sum_{k=1}^{27} f_{k}\\
-			\rho \vect{u} &=& \sum_{k=1}^{27} f_{k} \boldsymbol{\xi}_{k} + \dfrac{\Delta t}{2} \rho \boldsymbol{g}
+			\rho &=& \sum_{k=1}^{27} \varphi_{k}\\
+			\rho \vect{u} &=& \sum_{k=1}^{27} \varphi_{k} \boldsymbol{\xi}_{k} + \dfrac{\Delta t}{2} \rho \boldsymbol{g}
 		\end{eqnarray*}
 			\textbf{Okrajové a počáteční podmínky:}\\
 			\begin{itemize}
-				\item hranice oblasti $ \rightarrow $ symetrické OP
+				\item konstatní přítok a free outflow OP
 				\item hranice objektu $ \rightarrow $ bounce-back
 				\item rovnovážná počáteční podmínka
 			\end{itemize}
@@ -196,7 +198,7 @@
 		\item Vyčíslení $ f \ (x \, ) $ pomocí LBM $\Rightarrow$ \alert{výpočetně i časově náročné}
 		\item Algoritmy:
 			 \begin{itemize}
-				\item[-] Nelderova-Meadova metoda -- vlastní implementace podporující paralelizaci
+				\item[-] Nelderova-Meadova metoda -- vlastní implementace \alert{podporující paralelizaci}
 				\item[-] Mesh Adaptive Direct Search (NOMAD [1])
 			 \end{itemize}
 	\end{itemize}
@@ -222,7 +224,7 @@
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{1 parametr - posun IVC}
+\begin{frame}{Idealizovaný model TCPC}
 	\begin{center}	
 		\includegraphics[width=0.7\linewidth, trim={0 0 0 0}, clip]{Images/3d-tcpc-schema-combined.pdf}	
 	\end{center}		
@@ -239,86 +241,143 @@
 %%------------------------------------------------
 \begin{frame}{1 parametr - účelové funkce}
 	\begin{itemize}
-		\item Hodnoty účelových funkcí v závislosti na posunu $o_1$ (pouze nezáporný posun)
+		\item Účelových funkce v závislosti na posunu $o_1$ (vazba určená dělením IVC proudění)
 	\end{itemize}
 	\begin{columns}
 		\begin{column}{.5\textwidth}
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/stress.pdf}			
-		\end{column}
+			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/mean_stress_3_interpolated.pdf}			
+		\end{column}\hfill%
 		\begin{column}{.5\textwidth}
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/tke.pdf}
+			\includegraphics[width=0.9\linewidth, trim={0 0 0 0}, clip]{Images/mean_turbulence_kinetic_energy_interpolated.pdf}
 		\end{column}
 	\end{columns}
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1 parametr}
+
+\begin{frame}{1 parametr - výsledky}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\includegraphics[width=0.7\linewidth, trim={0 0 0 3mm}, clip]{Images/problem1a.png}		
+			\bgroup
+			\tiny
+			\centering
+			\setlength\tabcolsep{5mm}
+			\def\arraystretch{1.3}%
+			\begin{tabular}{|c|c|c|}
+				\hline
+   				Metoda & Nelder-Mead & MADS \\ \hline
+				Výpočetní čas [$h$] & 68.9 & 155.8 \\ \hline
+			\end{tabular}
+			\egroup	
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\includegraphics[width=0.7\linewidth, trim={0 0 0 1.5mm}, clip]{Images/problem1b.png}
+			\bgroup
+			\tiny
+			\centering
+			\setlength\tabcolsep{5mm}
+			\def\arraystretch{1.3}%
+			\begin{tabular}{|c|c|c|}
+				\hline
+				Metoda & Nelder-Mead & MADS \\ \hline
+				Výpočetní čas [$h$] & 44.7 & 150.1 \\ \hline
+			\end{tabular}
+			\egroup	
+		\end{column}
+	\end{columns}
+\end{frame}
+%%------------------------------------------------
+\begin{frame}{5 parametrů - model}
+	
+	\addtocounter{framenumber}{-1}
 	\begin{itemize}
-		\item Určení vazeb pro posun dle fyziologických požadavků $\Rightarrow$ 0 cm až 1.2 cm
+		\item Posun osy IVC, naklonění os dolního a horního kanálu, tvar napojení
 	\end{itemize}
 	\begin{center}
-%		\vspace{-0.5cm}
-		\includegraphics[width=0.55\linewidth, trim={0 0 0 0mm}, clip]{Images/IVCsplit.pdf}
+		\includegraphics[width=0.45\linewidth, trim={0 0 0 0}, clip]{Images/model2.pdf}
+	\end{center}
+\end{frame}
+%------------------------------------------------
+\begin{frame}{5 parametrů - výsledky}
+	
+\begin{figure}
+	\centering	
+	\begin{subfigure}{0.5\textwidth}
 		\centering
-		\includegraphics[width=0.15\linewidth, trim={0 0 0 0mm}, clip]{Images/split-leg.pdf}
-	\end{center}			
+		{\textbf{NM}}\\[2pt]
+		
+		\includegraphics[
+		width=\textwidth,
+		trim={0mm 0mm 0mm 0mm}, clip
+		]{Images/nm_sr_multi_crop.pdf}\\[5pt]
+		\normalsize
+	\end{subfigure}\hfill%
+	\begin{subfigure}{0.5\textwidth}
+		\centering
+		{\textbf{MADS}}\\[2pt]
+		
+		\includegraphics[
+		width=1.0\textwidth,
+		trim={0mm 0mm 0mm 0mm}, clip
+		]{Images/mads_sr_multi_crop.pdf}\\[5pt]
+		\normalsize
+	\end{subfigure}
+	\bgroup
+	\scriptsize
+	\centering
+	\setlength\tabcolsep{3.5mm}
+	\def\arraystretch{1.3}%
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+		\multicolumn{6}{c}{} \\ \hline
+		Řešení & Čas [$h$] & $o^{\mathrm{}}_1 \, [\mathrm{cm}]$ & $\alpha^{\mathrm{}}_1 \, [^\circ]$ & $\alpha^{\mathrm{}}_2 \, [^\circ]$ &  $\eta^{\mathrm{}}_1 \, [\mathrm{cm}]$ & $\eta^{\mathrm{}}_2 \, [\mathrm{cm}]$ \\ \hline
+		$\mathbf{x^{\star}_\mathrm{NM}}$ & $\mathbf{49.2}$ & $-0.139$ & $ 6.8$ & $-0.2$ & $0.058$ & $ 0.128$ \\ \hline
+		$\mathbf{x^{\star}_\mathrm{MADS}}$ & $\mathbf{144.2}$ & $0.1$ & $ 16$ & $13$ & $0$ & $ 0.25$ \\ \hline
+	\end{tabular}
+	\egroup
+	\vspace{1mm}
+	\caption{Convergence behavior,  a summary of the total elapsed time, and the optimal solutions $\vec{x^{\star}_\mathrm{NM}}$ and $\vec{x^{\star}_\mathrm{MADS}}$ obtained using the NM and MADS methods, respectively.
+		%The plots illustrate the convergence behavior by showing the best estimate of the objective function value against $\# f$ (the number of evaluations of $f$). The table below the plots provides a summary of the total elapsed time and the comparison of the points identified as the optimal solution by the NM method ($\vec{x^{\star}_\mathrm{NM}}$) and the MADS method ($\vec{x^{\star}_\mathrm{MADS}}$).
+	}
+	\label{fig:optim results nd}
+\end{figure}	
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1 parametr - minimalizace smykové rychlosti}
-	\begin{columns}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08stress-side.pdf}
-			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/stress_leg.pdf}			
-		\end{column}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08velocity-side.pdf}
-			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
-		\end{column}
-	\end{columns}	
-	\vspace{3mm}
+\begin{frame}{5 parametrů - výsledky}
+	
+	\addtocounter{framenumber}{-1}
 	\begin{center}
-		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/stress-mini.pdf}
+	\includegraphics[width=0.95\linewidth, trim={0 0 0 0}, clip]{Images/popisky.png}
+	\includegraphics[width=0.95\linewidth, trim={0 0 0 0}, clip]{Images/smyk.png}
 	\end{center}	
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1 parametr - minimalizace smykové rychlosti}
-	\begin{columns}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08stress-top.pdf}
-			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/stress_leg.pdf}			
-		\end{column}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/helix.pdf}
-			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
-		\end{column}
-	\end{columns}	
-	\vspace{3mm}
+\begin{frame}{5 parametrů - výsledky}
+	
+	\addtocounter{framenumber}{-1}
 	\begin{center}
-		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/stress-mini.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 0 0 0}, clip]{Images/popisky.png}
+		\includegraphics[width=0.99\linewidth, trim={0 0 0 0}, clip]{Images/fluc.png}
 	\end{center}	
 \end{frame}
 %------------------------------------------------
-\begin{frame}{1 parametr - minimalizace TKE}
-	\begin{columns}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 -2mm 0 0}, clip]{Images/12IVCsplit.pdf}
-			\includegraphics[width=0.33\linewidth, trim={0 0 0 0mm}, clip]{Images/split-leg.pdf}			
-		\end{column}
-		\begin{column}{.5\textwidth}
-			\centering
-			\includegraphics[width=1\linewidth, trim={0 0 0 0}, clip]{Images/08velocity-side.pdf}
-			\includegraphics[width=0.65\linewidth, trim={0 0 0 0}, clip]{Images/mean_velocity_leg.pdf}
-		\end{column}
-	\end{columns}	
-	\vspace{3mm}
+\begin{frame}{5 parametrů - výsledky}
+	
+	\addtocounter{framenumber}{-1}
 	\begin{center}
-		\includegraphics[width=.18\linewidth, trim={0 0 0 0}, clip]{Images/tke-mini.pdf}
+		\includegraphics[width=0.95\linewidth, trim={0 0 0 0}, clip]{Images/popisky.png}
+		\includegraphics[width=0.99\linewidth, trim={0 0 0 0}, clip]{Images/split.png}
 	\end{center}	
 \end{frame}
+%------------------------------------------------
+\begin{frame}{5 parametrů - výsledky}
+	
+	\addtocounter{framenumber}{-1}
+	\begin{center}
+		\includegraphics[width=0.95\linewidth, trim={0 0 0 0}, clip]{Images/popisky.png}
+		\includegraphics[width=0.99\linewidth, trim={0 0 0 0}, clip]{Images/streamlines.png}
+	\end{center}	
+\end{frame}
+
 %%------------------------------------------------
 
 \begin{frame}{Shrnutí}
@@ -329,7 +388,12 @@
 		\setlength\itemsep{1.1em}
 		\item Vytvořen rámec pro generování a řešení netriviálních optimalizačních úloh s pomocí LBM
 		\item Navrženy parametrické modely idealizovaného TCPC
-		\item Plány do budoucna: otestování komplexnějšího modelu s více parametry ¨(DP), experimenty na MRI
+		\item Plány do budoucna (PGS):  zdokonalení rámce, reálná data, experimenty na MRI
+		\item Publikace:\\[5pt]
+		\begin{itemize}
+			\item "Geometry optimization of idealized total	cavopulmonary connection using a CFD-based framework," \textit{FIMH 2025, Dallas} - podáno\\[5pt]
+			\item Článek v přípravě
+		\end{itemize}
 	\end{itemize}
 	\vfill%
 	\huge{\centerline{\textbf{Děkuji za pozornost!}}}
@@ -360,100 +424,58 @@
 %
 %
 %%------------------------------------------------
-%\begin{frame}[plain]{1. Automatický výpočet derivace}
-%%	\addtocounter{framenumber}{-1}
-%	\begin{itemize}
-%		\item[-] Volně dostupné balíky v rámci \texttt{JuliaDiff} [4]:
-%	\end{itemize}
-%	\begin{enumerate}
-%		\item \texttt{FiniteDifferences.jl} [5]
-%		\item \texttt{ForwardDiff.jl} [6]
-%	\end{enumerate}
-%	\vspace{2mm}
-%	$$
-%	\vec{x}=\left[\begin{array}{c}
-%	x_1 \\
-%	\vdots \\
-%	x_i \\
-%	\vdots \\
-%	x_k
-%	\end{array}\right] \rightarrow \vec{x}_\epsilon=\left[\begin{array}{c}
-%	x_1+\epsilon_1+0 \sum_{n=2}^k \epsilon_n \\
-%	\vdots \\
-%	x_i+\epsilon_i+0 \sum_{n \neq i} \epsilon_n \\
-%	\vdots \\
-%	x_k+\epsilon_k+0 \sum_{n=1}^{k-1} \epsilon_n
-%	\end{array}\right]=\left[\begin{array}{c}
-%	x_1+\epsilon_1 \\
-%	\vdots \\
-%	x_i+\epsilon_i \\
-%	\vdots \\
-%	x_k+\epsilon_k
-%	\end{array}\right] \rightarrow f\left(\vec{x}_\epsilon\right)=f(\vec{x})+\sum_{i=1}^k \frac{\partial f(\vec{x})}{\partial x_i} \epsilon_i
-%	$$\\[4pt]
-%	\tiny{[4] https://juliadiff.org/}\\[3pt]
-%	\tiny{[5] https://github.com/JuliaDiff/FiniteDifferences.jl}\\[3pt]
-%	\tiny{[6] Revels J., et al. (2016), \textit{Forward-Mode Automatic Differentiation in Julia}, doi: 10.48550/arXiv.1607.07892}
-%\end{frame}
-%%------------------------------------------------
-%\begin{frame}[plain]{2. Použití schodovitých OP}
+\begin{frame}[plain,noframenumbering]{1. Hustota na přítoku OP}
 %	\addtocounter{framenumber}{-1}
-%	\begin{itemize}
-%		\item Problém pro gradientní metody
-%	\end{itemize}
-%	\pause
-%	\vspace{-8mm}
-%	\begin{columns}
-%		\begin{column}{.5\textwidth}
-%			\begin{figure}
-%				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2left.pdf}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{.5\textwidth}
-%			\begin{figure}
-%				\includegraphics[width=1.07\linewidth, trim={0 0 0cm 0mm}, clip]{Images/2right.pdf}
-%			\end{figure}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
-%%------------------------------------------------
-%\begin{frame}[plain]{3. Plánovaná rozšíření}
-%	\addtocounter{framenumber}{-1}
-%	\begin{columns}
-%		\begin{column}{.5\textwidth}
-%			\begin{figure}
-%				\renewcommand{\figurename}{Fantom}
-%				\includegraphics[width=1.0\linewidth, trim={0 0 0cm 0mm}, clip]{Images/fantom.png}
-%				\caption{Převzato z [1], foto: J. Ryszawy}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{.5\textwidth}
-%			\begin{figure}
-%				\renewcommand{\figurename}{Modifikace systému}
-%				\includegraphics[width=0.85\linewidth, trim={0 0 0 0mm}, clip]{Images/energyloss.pdf}
-%				\caption{Převzato z [3]}		
-%			\end{figure}
-%		\end{column}
-%	\end{columns}	
-%	\vspace{1mm}
-%	\tiny{[1] Eichler P. (2023)}, \textit{Mathematical modeling of fluid flow using lattice Boltzmann
-%	method.}, Dizertační práce\\[3pt]
-%	\tiny{[3] Rijnberg F. (2018), \textit{Energetics of Blood Flow in Cardiovascular
-%			Disease
-%		}, doi: 10.1161/CIRCULATIONAHA.117.033359}
-%\end{frame}
-%%------------------------------------------------
-%\begin{frame}[plain]{4. Reálné geometrie}
-%	\addtocounter{framenumber}{-1}
-%	\animategraphics[loop,autoplay,width=0.98\linewidth]{33}{Images/demosnaps/tcpc-}{0}{131}
-%	\vspace{1mm}
-%	\tiny{{[7] Marsden A., et al. (2010)}, \textit{A new multiparameter approach to computational simulation for Fontan assessment and redesign}, ,\\doi: 10.1111/j.1747-0803.2010.00383.x, data dostupná z www.vascularmodel.com}
-%\end{frame}
+	\begin{itemize}
+		\item Dotaz: \textit{Jak je nastavena/vypočítána hustota pro přítokovou okrajovou podmínku?}
+		\item Na přítoku je použita rovnovážná (equilibrium) okrajová podmínka, kde se hustota fixuje na referenční hodnotu ($\rho=1 \, [-]$), rychlost se předepisuje konstatní.
+		\item[]
+		\item[]
+		\item[]
+		\item[]
+		\item[]
+		\item[]	
+	\end{itemize}
+\end{frame}
 %------------------------------------------------
-%
-%\begin{frame}
-%    \Huge{\centerline{\textbf{Thank you for your attention!}}}
-%\end{frame}
-
+\begin{frame}[plain,noframenumbering]{2. Kritérium zastavení simulace}
+	%	\addtocounter{framenumber}{-1}
+	\begin{itemize}
+		\item Dotaz: \textit{Jaké je přesné kritérium pro zastavení simulace proudění v LBM?}
+		\item Je specifikovaný charakteristický čas $T$ stejný pro všechny simulace. Tento čas je volen tak, aby mohl být použit Reynoldsův rozklad.
+		\item[]
+		\item[]
+		\item[]
+		\item[]
+		\item[]
+		\item[]	
+	\end{itemize}
+\end{frame}
+%%------------------------------------------------
+\begin{frame}[plain,noframenumbering]{3. Nesymetrie symetrické úlohy}
+	%	\addtocounter{framenumber}{-1}
+	\begin{itemize}
+		\item Dotaz: \textit{Co mohlo způsobit nesymetrii řešení jinak symetrické úlohy (je úloha opravdu symetrická i po diskretizaci?)}
+		\item Výpočty prováděny s jednoduchou strojovou přesností, vliv by tedy mohla mít numerická chyba. Projektovaná geometrie je i po diskretizaci symetrická.\\[8pt]
+		\includegraphics[width=0.99\linewidth, trim={0 0 0 0}, clip]{Images/dotaz.png}
+	\end{itemize}
+\end{frame}
 %----------------------------------------------------------------------------------------
+%------------------------------------------------
+\begin{frame}[plain,noframenumbering]{4. Výpočet napětí na stěnách}
+	%	\addtocounter{framenumber}{-1}
+	\begin{itemize}
+		\item Dotaz: \textit{Dal by se pro výpočet napětí na stěnách použít takový algoritmus, který používá M. Matyka?}\\[8pt]
+		\includegraphics[width=0.99\linewidth, trim={0 0 0 0}, clip]{Images/dotaz2.png}
+	\end{itemize}
+\end{frame}
+%----------------------------------------------------------------------------------------
+%------------------------------------------------
+\begin{frame}[plain,noframenumbering]{5. Urychlení rámce}
+	%	\addtocounter{framenumber}{-1}
+	\begin{itemize}
+		\item Dotaz: \textit{Dal by se optimalizační rámec více urychlit při zachování potřebného prostorového a časového rozlišení?}\\[8pt]
+		\item Jistě je možné dále zefektivnit samotný  použitý optimalizační algoritmus. Dále je zde potenciál projektovat perturbovanou geometrii přímo za běhu jedné simulace, což by značně mohlo zkrátit čas potřebný k vyčíslení účelové funkce.
+	\end{itemize}
+\end{frame}
 \end{document}
